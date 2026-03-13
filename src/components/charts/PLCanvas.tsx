@@ -8,17 +8,18 @@ const SVG_H = 280;
 const PAD = { top: 20, right: 50, bottom: 30, left: 60 };
 
 export function PLCanvas() {
-  const { legs, breakevens } = useSpreadStore();
+  const { legs, breakevens, entryDay } = useSpreadStore();
   const { currentPrice, currentDay } = useSimulationStore();
 
   // Expiration P/L (T=0)
   const expirationCurve = usePLCurve(legs, currentPrice, 0);
 
-  // Current-day P/L (use average DTE)
+  // Current-day P/L (use average DTE minus elapsed since spread was built)
   const avgDTE = legs.length > 0
     ? legs.reduce((s, l) => s + l.contract.daysToExpiry, 0) / legs.length
     : 0;
-  const T = Math.max(0, (avgDTE - currentDay) / 252);
+  const elapsed = currentDay - entryDay;
+  const T = Math.max(0, (avgDTE - elapsed) / 252);
   const todayCurve = usePLCurve(legs, currentPrice, T > 0 ? T : 0);
 
   const chartData = useMemo(() => {

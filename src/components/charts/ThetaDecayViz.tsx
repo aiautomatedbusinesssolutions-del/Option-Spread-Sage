@@ -2,7 +2,7 @@ import { useSpreadStore } from "../../stores/spreadStore";
 import { useSimulationStore } from "../../stores/simulationStore";
 
 export function ThetaDecayViz() {
-  const { legs } = useSpreadStore();
+  const { legs, entryDay } = useSpreadStore();
   const { currentDay } = useSimulationStore();
 
   if (legs.length === 0) return null;
@@ -13,8 +13,9 @@ export function ThetaDecayViz() {
   }, 0);
 
   const avgDTE = legs.reduce((s, l) => s + l.contract.daysToExpiry, 0) / legs.length;
-  const remainingDTE = Math.max(0, Math.round(avgDTE - currentDay));
-  const dteFraction = avgDTE > 0 ? Math.max(0, 1 - currentDay / avgDTE) : 0;
+  const elapsed = currentDay - entryDay;
+  const remainingDTE = Math.max(0, Math.round(avgDTE - elapsed));
+  const dteFraction = avgDTE > 0 ? Math.max(0, 1 - elapsed / avgDTE) : 0;
 
   // Theta accelerates near expiration — show as a curve
   const barSegments = 20;

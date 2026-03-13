@@ -5,7 +5,7 @@ import { netGreeks } from "../lib/math/spreads";
 import { probabilityOfProfit } from "../lib/math/probability";
 
 export function useGreeks() {
-  const { legs, breakevens } = useSpreadStore();
+  const { legs, breakevens, entryDay } = useSpreadStore();
   const { currentPrice, currentDay } = useSimulationStore();
 
   return useMemo(() => {
@@ -21,7 +21,8 @@ export function useGreeks() {
     }
 
     const avgDTE = legs.reduce((s, l) => s + l.contract.daysToExpiry, 0) / legs.length;
-    const remainingDTE = Math.max(0, avgDTE - currentDay);
+    const elapsed = currentDay - entryDay;
+    const remainingDTE = Math.max(0, avgDTE - elapsed);
     const T = remainingDTE / 252;
     const r = 0.05;
 
@@ -46,5 +47,5 @@ export function useGreeks() {
       rho: greeks.rho,
       probProfit,
     };
-  }, [legs, breakevens, currentPrice, currentDay]);
+  }, [legs, breakevens, entryDay, currentPrice, currentDay]);
 }

@@ -3,7 +3,7 @@ import { useSimulationStore } from "../../stores/simulationStore";
 import { useSpreadStore } from "../../stores/spreadStore";
 
 export function SpreadBlueprintLibrary() {
-  const { chain, currentPrice, selectedTicker } = useSimulationStore();
+  const { chain, currentPrice, currentDay, selectedTicker } = useSimulationStore();
   const setLegs = useSpreadStore((s) => s.setLegs);
 
   return (
@@ -17,7 +17,7 @@ export function SpreadBlueprintLibrary() {
             key={template.id}
             onClick={() => {
               const legs = template.buildLegs(chain);
-              if (legs) setLegs(legs, currentPrice, selectedTicker.symbol);
+              if (legs) setLegs(legs, currentPrice, selectedTicker.symbol, currentDay);
             }}
             className="text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg p-3 transition-colors cursor-pointer"
           >

@@ -5,13 +5,14 @@ import { netGreeks, analyzeSpread } from "../lib/math/spreads";
 interface SpreadState {
   legs: SpreadLeg[];
   ticker: string;
+  entryDay: number;
   netDebit: number;
   maxProfit: number;
   maxLoss: number;
   breakevens: number[];
   greeks: Greeks;
 
-  setLegs: (legs: SpreadLeg[], currentPrice: number, ticker: string) => void;
+  setLegs: (legs: SpreadLeg[], currentPrice: number, ticker: string, currentDay: number) => void;
   clearSpread: () => void;
 }
 
@@ -20,15 +21,16 @@ const emptyGreeks: Greeks = { delta: 0, gamma: 0, theta: 0, vega: 0, rho: 0 };
 export const useSpreadStore = create<SpreadState>((set) => ({
   legs: [],
   ticker: "",
+  entryDay: 0,
   netDebit: 0,
   maxProfit: 0,
   maxLoss: 0,
   breakevens: [],
   greeks: emptyGreeks,
 
-  setLegs: (legs, currentPrice, ticker) => {
+  setLegs: (legs, currentPrice, ticker, currentDay) => {
     if (legs.length === 0) {
-      set({ legs: [], ticker: "", netDebit: 0, maxProfit: 0, maxLoss: 0, breakevens: [], greeks: emptyGreeks });
+      set({ legs: [], ticker: "", entryDay: 0, netDebit: 0, maxProfit: 0, maxLoss: 0, breakevens: [], greeks: emptyGreeks });
       return;
     }
 
@@ -43,6 +45,7 @@ export const useSpreadStore = create<SpreadState>((set) => ({
     set({
       legs,
       ticker,
+      entryDay: currentDay,
       netDebit: analysis.netDebit,
       maxProfit: analysis.maxProfit,
       maxLoss: analysis.maxLoss,
@@ -52,6 +55,6 @@ export const useSpreadStore = create<SpreadState>((set) => ({
   },
 
   clearSpread: () => {
-    set({ legs: [], ticker: "", netDebit: 0, maxProfit: 0, maxLoss: 0, breakevens: [], greeks: emptyGreeks });
+    set({ legs: [], ticker: "", entryDay: 0, netDebit: 0, maxProfit: 0, maxLoss: 0, breakevens: [], greeks: emptyGreeks });
   },
 }));

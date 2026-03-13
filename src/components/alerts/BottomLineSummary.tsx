@@ -10,7 +10,7 @@ import { translate } from "../../data/translations";
  * Tells the user what they're betting, what they can win/lose, and how time affects them.
  */
 export function BottomLineSummary() {
-  const { legs, ticker, netDebit, maxProfit, maxLoss, breakevens } =
+  const { legs, ticker, entryDay, netDebit, maxProfit, maxLoss, breakevens } =
     useSpreadStore();
   const { currentPrice, currentDay } = useSimulationStore();
   const { theta, probProfit } = useGreeks();
@@ -37,9 +37,10 @@ export function BottomLineSummary() {
     betDescription = `${ticker} moves in your favor`;
   }
 
-  // Average DTE
+  // Average DTE minus elapsed since spread was built
   const avgDTE = legs.reduce((s, l) => s + l.contract.daysToExpiry, 0) / legs.length;
-  const daysLeft = Math.max(0, Math.round(avgDTE - currentDay));
+  const elapsed = currentDay - entryDay;
+  const daysLeft = Math.max(0, Math.round(avgDTE - elapsed));
 
   // Cost/credit description
   const costStr = isDebit
