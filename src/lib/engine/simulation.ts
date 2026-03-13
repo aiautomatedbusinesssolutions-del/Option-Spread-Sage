@@ -17,21 +17,21 @@ function adjustedIV(
 
   switch (config.ivSchedule) {
     case "stable":
-      return baseIV * config.volMultiplier;
+      return baseIV;
     case "rising":
       // IV rises linearly from base to 1.6x over the period
-      return baseIV * config.volMultiplier * (1 + 0.6 * progress);
+      return baseIV * (1 + 0.6 * progress);
     case "falling":
       // IV falls linearly from base to 0.6x over the period
-      return baseIV * config.volMultiplier * (1 - 0.4 * progress);
+      return baseIV * (1 - 0.4 * progress);
     case "crush":
       // IV starts elevated (1.5x) then drops sharply in the first third
-      return baseIV * config.volMultiplier * (progress < 0.33
+      return baseIV * (progress < 0.33
         ? 1.5 - 1.0 * (progress / 0.33)
         : 0.5);
     case "spike_then_crush":
       // IV spikes to 2x in first 20%, then crushes back to 0.6x
-      return baseIV * config.volMultiplier * (progress < 0.2
+      return baseIV * (progress < 0.2
         ? 1 + 5 * progress
         : 2.0 - 1.4 * ((progress - 0.2) / 0.8));
   }
