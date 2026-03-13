@@ -2,6 +2,8 @@ import { useSpreadStore } from "../../stores/spreadStore";
 import { SpreadBlueprintLibrary } from "./SpreadBlueprintLibrary";
 import { LegCard } from "./LegCard";
 import { TugOfWarVisual } from "./TugOfWarVisual";
+import { Tooltip } from "../ui/Tooltip";
+import { translate } from "../../data/translations";
 
 export function SpreadBuilder() {
   const { legs, netDebit, maxProfit, maxLoss, breakevens, clearSpread } =
@@ -39,7 +41,9 @@ export function SpreadBuilder() {
           {/* Summary stats */}
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="bg-slate-800/50 rounded-lg px-3 py-2">
-              <div className="text-xs text-slate-500">Net Cost</div>
+              <div className="text-xs text-slate-500">
+                <Tooltip text={translate("net cost") ?? ""}>Net Cost</Tooltip>
+              </div>
               <div
                 className={
                   netDebit >= 0 ? "text-rose-400 font-semibold" : "text-emerald-400 font-semibold"
@@ -54,7 +58,9 @@ export function SpreadBuilder() {
               </div>
             </div>
             <div className="bg-slate-800/50 rounded-lg px-3 py-2">
-              <div className="text-xs text-slate-500">Max Profit</div>
+              <div className="text-xs text-slate-500">
+                <Tooltip text={translate("max profit") ?? ""}>Max Profit</Tooltip>
+              </div>
               <div className="text-emerald-400 font-semibold">
                 {isFinite(maxProfit)
                   ? `$${maxProfit.toFixed(0)}`
@@ -62,7 +68,9 @@ export function SpreadBuilder() {
               </div>
             </div>
             <div className="bg-slate-800/50 rounded-lg px-3 py-2">
-              <div className="text-xs text-slate-500">Max Loss</div>
+              <div className="text-xs text-slate-500">
+                <Tooltip text={translate("max loss") ?? ""}>Max Loss</Tooltip>
+              </div>
               <div className="text-rose-400 font-semibold">
                 {isFinite(maxLoss)
                   ? `-$${Math.abs(maxLoss).toFixed(0)}`
@@ -70,7 +78,9 @@ export function SpreadBuilder() {
               </div>
             </div>
             <div className="bg-slate-800/50 rounded-lg px-3 py-2">
-              <div className="text-xs text-slate-500">Breakeven</div>
+              <div className="text-xs text-slate-500">
+                <Tooltip text={translate("breakeven") ?? ""}>Breakeven</Tooltip>
+              </div>
               <div className="text-sky-400 font-semibold">
                 {breakevens.length > 0
                   ? breakevens.map((b) => `$${b.toFixed(0)}`).join(", ")

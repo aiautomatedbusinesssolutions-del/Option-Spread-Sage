@@ -1,9 +1,11 @@
 import type { SpreadPosition } from "./options";
+import type { PricePath } from "./market";
 
 export interface Trade {
   id: string;
   ticker: string;
   spread: SpreadPosition;
+  pricePath: PricePath;
   entryDay: number;
   entryPrice: number;
   exitDay: number | null;

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSimulationStore } from "../../stores/simulationStore";
+import { useSpreadStore } from "../../stores/spreadStore";
 import { tickers } from "../../data/tickers";
 import { getAllScenarios } from "../../data/scenarios";
 import type { ScenarioType } from "../../types/market";
@@ -7,6 +8,7 @@ import type { ScenarioType } from "../../types/market";
 export function Header() {
   const { selectedTicker, selectedScenario, setTicker, setScenario } =
     useSimulationStore();
+  const clearSpread = useSpreadStore((s) => s.clearSpread);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -70,6 +72,7 @@ export function Header() {
                   key={t.symbol}
                   onClick={() => {
                     setTicker(t);
+                    clearSpread();
                     setSearchQuery("");
                     setShowDropdown(false);
                   }}
@@ -98,7 +101,10 @@ export function Header() {
         {/* Scenario selector */}
         <select
           value={selectedScenario}
-          onChange={(e) => setScenario(e.target.value as ScenarioType)}
+          onChange={(e) => {
+            setScenario(e.target.value as ScenarioType);
+            clearSpread();
+          }}
           className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-100 focus:outline-none focus:border-sky-500 cursor-pointer"
         >
           {scenarios.map((s) => (
